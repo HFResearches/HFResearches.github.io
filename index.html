@@ -1,31 +1,526 @@
-
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HFResearches combines low-level C++ engineering with rigorous statistical research to build transparent, reproducible quantitative systems.">
+  <title>HFResearches — Quantitative Research &amp; Low-Level Engineering</title>
 
-  <title>HFResearches a concept of Researching with Low-Level Engineering systems</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap" rel="stylesheet">
-<style>
-  html, body{
-    background: url("images/background.png") center / cover no-repeat;
-    min-height: 100vh;
-  }
-</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
 
+  <style>
+    :root {
+      --bg: #06080b;
+      --surface: rgba(13, 18, 24, 0.78);
+      --surface-solid: #0d1218;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f5f7f8;
+      --muted: #a7b0ba;
+      --accent: #57f2bd;
+      --accent-soft: rgba(87, 242, 189, 0.12);
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: absolute;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 8, 11, 0.48);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--text);
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      position: relative;
+      isolation: isolate;
+      background:
+        linear-gradient(90deg, rgba(6, 8, 11, 0.97) 0%, rgba(6, 8, 11, 0.83) 48%, rgba(6, 8, 11, 0.45) 100%),
+        url("images/background.png") center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: auto 0 0;
+      height: 35%;
+      background: linear-gradient(transparent, var(--bg));
+    }
+
+    .hero-content {
+      max-width: 840px;
+      padding: 150px 0 90px;
+    }
+
+    .eyebrow {
+      margin: 0 0 20px;
+      color: var(--accent);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Space Grotesk", sans-serif;
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+    }
+
+    h1 {
+      max-width: 830px;
+      margin: 0;
+      font-size: clamp(3.6rem, 8vw, 7.3rem);
+      font-weight: 700;
+    }
+
+    h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-copy {
+      max-width: 700px;
+      margin: 28px 0 0;
+      color: #c3cad1;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 38px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border: 1px solid var(--line);
+      font-weight: 600;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #04120d;
+    }
+
+    main section:not(.hero) {
+      padding: 110px 0;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 64px;
+      align-items: start;
+      margin-bottom: 58px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 4.7rem);
+      font-weight: 600;
+    }
+
+    .section-heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .principle {
+      min-height: 290px;
+      padding: 34px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(145deg, var(--accent-soft), transparent 44%);
+    }
+
+    .principle-number {
+      color: var(--accent);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .principle h3 {
+      margin: 58px 0 14px;
+      font-size: 1.55rem;
+      font-weight: 600;
+    }
+
+    .principle p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .method {
+      background: var(--surface-solid);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .method-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: method;
+    }
+
+    .method-list li {
+      counter-increment: method;
+      display: grid;
+      grid-template-columns: 90px 0.7fr 1.3fr;
+      gap: 30px;
+      padding: 34px 0;
+      border-top: 1px solid var(--line);
+      align-items: start;
+    }
+
+    .method-list li::before {
+      content: "0" counter(method);
+      color: var(--accent);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .method-list h3,
+    .method-list p {
+      margin: 0;
+    }
+
+    .method-list h3 {
+      font-size: 1.35rem;
+    }
+
+    .method-list p {
+      color: var(--muted);
+    }
+
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .focus-item {
+      padding: 34px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .focus-item h3 {
+      margin: 0 0 12px;
+      font-size: 1.45rem;
+    }
+
+    .focus-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .commitment {
+      text-align: center;
+    }
+
+    .commitment blockquote {
+      max-width: 970px;
+      margin: 0 auto;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 5vw, 4.8rem);
+      font-weight: 500;
+      line-height: 1.12;
+      letter-spacing: -0.045em;
+    }
+
+    .commitment blockquote strong {
+      color: var(--accent);
+      font-weight: inherit;
+    }
+
+    footer {
+      padding: 34px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 760px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: 820px;
+        background-position: 62% center;
+      }
+
+      .section-heading,
+      .method-list li {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .principles,
+      .focus-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .principle {
+        min-height: auto;
+      }
+
+      .principle h3 {
+        margin-top: 34px;
+      }
+
+      main section:not(.hero) {
+        padding: 80px 0;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <section class="about-us" style="text-align: center;">
-  <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 60px; font-weight: 700;">
-  Our Purpose</h1>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#top">HF<span>Researches</span></a>
+      <div class="nav-links">
+        <a href="#purpose">Purpose</a>
+        <a href="#principles">Principles</a>
+        <a href="#method">Method</a>
+        <a href="#research">Research</a>
+      </div>
+    </nav>
+  </header>
 
-  <p>
-    Our mission is to keep way much forward quantitative researching systems<br>
-    by reconciling <strong> lower-level based statistical systems engineering</strong><br>
-    with very harsh<strong> statical-based thinking</strong>.
-  </p> 
-  </section>  
-</body>   
+  <main id="top">
+    <section class="hero" id="purpose">
+      <div class="container">
+        <div class="hero-content">
+          <p class="eyebrow">Quantitative research · C++ systems engineering</p>
+          <h1>Research built from the <em>machine up.</em></h1>
+          <p class="hero-copy">
+            HFResearches explores financial systems where statistical evidence and low-level engineering meet. We design, test, and document quantitative ideas with a focus on correctness, measurable performance, and reproducibility.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#principles">Explore our purpose</a>
+            <a class="button" href="https://github.com/HFResearches" target="_blank" rel="noopener noreferrer">View the research</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="principles">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Our purpose</p>
+            <h2>Evidence before confidence.</h2>
+          </div>
+          <p>
+            Our purpose is to move quantitative research forward by combining rigorous statistical reasoning with a deep understanding of the systems that execute it. A model is not complete when the equation works—it must also survive real data, real costs, and real computational constraints.
+          </p>
+        </div>
+
+        <div class="principles">
+          <article class="principle">
+            <span class="principle-number">01</span>
+            <h3>Statistical discipline</h3>
+            <p>We examine assumptions, uncertainty, out-of-sample behavior, and the possibility that an apparent edge is only noise.</p>
+          </article>
+
+          <article class="principle">
+            <span class="principle-number">02</span>
+            <h3>Systems awareness</h3>
+            <p>We study latency, memory, concurrency, networking, and execution because implementation details can change a strategy’s real behavior.</p>
+          </article>
+
+          <article class="principle">
+            <span class="principle-number">03</span>
+            <h3>Transparent validation</h3>
+            <p>Research should be inspectable. Methods, benchmarks, limitations, and failures matter as much as the final result.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="method" id="method">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Research method</p>
+            <h2>From hypothesis to measured system.</h2>
+          </div>
+          <p>
+            Every project begins with a falsifiable question and ends with evidence that another researcher can inspect. The goal is not to manufacture impressive results; it is to understand what remains true after serious testing.
+          </p>
+        </div>
+
+        <ol class="method-list">
+          <li>
+            <h3>Define</h3>
+            <p>State the market hypothesis, assumptions, measurable outcome, and conditions that would invalidate the idea.</p>
+          </li>
+          <li>
+            <h3>Engineer</h3>
+            <p>Build the data and execution path in modern C++, paying attention to ownership, concurrency, memory layout, networking, and failure handling.</p>
+          </li>
+          <li>
+            <h3>Validate</h3>
+            <p>Measure distributions, risk, costs, sensitivity, and out-of-sample performance instead of relying on a single return number.</p>
+          </li>
+          <li>
+            <h3>Publish</h3>
+            <p>Share the code, methodology, benchmarks, assumptions, and known limitations so the work can be examined and improved.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="research">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Research foundations</p>
+            <h2>What we work on.</h2>
+          </div>
+          <p>
+            HFResearches treats quantitative finance as both a mathematical and an engineering problem. Our work connects research logic to the infrastructure responsible for carrying it into reality.
+          </p>
+        </div>
+
+        <div class="focus-grid">
+          <article class="focus-item">
+            <h3>Market data systems</h3>
+            <p>Reliable ingestion, normalization, storage, and processing of real-time and historical financial data.</p>
+          </article>
+          <article class="focus-item">
+            <h3>Strategy research</h3>
+            <p>Hypothesis-driven studies of market behavior using probability, simulation, backtesting, and robust evaluation.</p>
+          </article>
+          <article class="focus-item">
+            <h3>Execution engineering</h3>
+            <p>Research into latency, slippage, transaction costs, networking, and the mechanics that separate theoretical results from live execution.</p>
+          </article>
+          <article class="focus-item">
+            <h3>Performance measurement</h3>
+            <p>Reproducible benchmarks that expose trade-offs in algorithms, concurrency models, memory use, and system architecture.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="commitment">
+      <div class="container">
+        <p class="eyebrow">Our commitment</p>
+        <blockquote>
+          Build fast systems, but make <strong>truth</strong> the first optimization target.
+        </blockquote>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner container">
+      <span>© 2026 HFResearches</span>
+      <span>Quantitative research grounded in engineering.</span>
+    </div>
+  </footer>
+</body>
 </html>
